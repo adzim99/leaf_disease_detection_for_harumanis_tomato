@@ -5,6 +5,7 @@ import tensorflow as tf
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing.image import img_to_array, load_img
 import streamlit as st
+from PIL import Image
 
 # Set seeds for reproducibility
 random.seed(42)
@@ -20,7 +21,7 @@ harumanis_model = load_model(MODEL_PATH_2)
 
 # Streamlit Web Application
 st.title("Dual Leaf Disease Detection System")
-st.write("Upload an image to detect diseases using either the Tomato Model or Harumanis Model.")
+st.write("Upload an image or capture one using your camera to detect diseases.")
 
 # Dropdown for model selection
 model_option = st.selectbox(
@@ -28,12 +29,20 @@ model_option = st.selectbox(
     ("Tomato Model", "Harumanis Model")
 )
 
-# File uploader
+# File uploader or Camera input
 uploaded_file = st.file_uploader("Upload an image (JPG, JPEG, PNG)", type=["jpg", "jpeg", "png"])
+camera_image = st.camera_input("Or capture an image using your camera")
 
-if uploaded_file is not None:
-    # Display the uploaded image
-    st.image(uploaded_file, caption="Uploaded Image", use_container_width=True)
+# Determine input source
+if uploaded_file or camera_image:
+    # Process the uploaded or captured image
+    if uploaded_file:
+        image_source = uploaded_file
+        st.image(uploaded_file, caption="Uploaded Image", use_container_width=True)
+    else:
+        image_source = camera_image
+        st.image(camera_image, caption="Captured Image", use_container_width=True)
+
     st.write("Processing...")
 
     # Get the target size based on the selected model's input shape
@@ -62,7 +71,8 @@ if uploaded_file is not None:
         }
 
     # Preprocess the image
-    image = load_img(uploaded_file, target_size=target_size)
+    image = Image.open(image_source)
+    image = image.resize(target_size)  # Resize to model's input size
     image_array = img_to_array(image)
     image_array = np.expand_dims(image_array, axis=0)
     image_array /= 255.0  # Normalize
@@ -78,4 +88,4 @@ if uploaded_file is not None:
     st.write(f"**Prediction:** {prediction_label}")
     st.write(f"**Confidence:** {confidence:.2f}%")
 else:
-    st.write("Please upload an image to classify.")
+    st.write("Please upload an image or capture one using your camera to classify.")
