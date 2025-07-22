@@ -139,8 +139,8 @@ To run the Streamlit web application on your local machine, follow these steps:
 1.  **Clone the Repository**
 
     ```bash
-    git clone https://github.com/adzim99/harumanis_tomato_disease_detection.git
-    cd harumanis_tomato_disease_detection
+    git clone https://github.com/adzim99/leaf_disease_detection_for_harumanis_tomato.git
+    cd leaf_disease_detection_for_harumanis_tomato
     ```
 
 2.  **Create a Virtual Environment (Recommended)**
@@ -159,7 +159,7 @@ To run the Streamlit web application on your local machine, follow these steps:
 4.  **Run the Application**
 
     ```bash
-    streamlit run leaf_disease_detection.py
+    streamlit run streamlit_app.py
     ```
 
 -----
